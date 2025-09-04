@@ -19,15 +19,24 @@ jobs:
         npm install
         npm test || true   # fail hone pe bhi pipeline aage chale
 
-    # -------- SonarQube Scan --------
-    - name: SonarQube Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      with:
-        args: >
-          -Dsonar.projectKey=my_project
-          -Dsonar.organization=my_org
-          -Dsonar.host.url=https://sonarcloud.io
+        # -------- SonarQube Scan (Self-hosted) --------
+    - name: Install SonarQube Scanner
+      run: |
+        sudo apt-get update
+        sudo apt-get install unzip -y
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+        unzip sonar-scanner-cli-*.zip
+        mv sonar-scanner-*/ sonar-scanner
+        echo "$(pwd)/sonar-scanner/bin" >> $GITHUB_PATH
+
+    - name: Run SonarQube Analysis
+      run: |
+        sonar-scanner \
+          -Dsonar.projectKey=my_project \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://210.79.129.173:9000 \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
 
     - name: Generate Sonar Summary
       run: |
