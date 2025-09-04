@@ -1,0 +1,47 @@
+name: CI/CD with Security
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🟢 Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 🟢 Step 2: SonarQube Scan (Docker SonarQube instance required)
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_HOST_URL: http://<YOUR_SERVER_IP>:9000
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # 🟢 Step 3: Build Docker image
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/food_delivery_frontend:latest .
+
+      # 🟢 Step 4: Trivy scan
+      - name: Run Trivy Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/food_delivery_frontend:latest
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      # 🟢 Step 5: Docker Login
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 🟢 Step 6: Push image
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/food_delivery_frontend:latest
+
