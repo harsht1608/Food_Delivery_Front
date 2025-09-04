@@ -32,7 +32,7 @@ jobs:
     - name: Run SonarQube Analysis
       run: |
         sonar-scanner \
-          -Dsonar.projectKey=my_project \
+          -Dsonar.projectKey=Food_Delivery_Frontend \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://210.79.129.173:9000 \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
