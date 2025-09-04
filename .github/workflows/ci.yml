@@ -48,7 +48,7 @@ jobs:
     - name: Run Trivy scan
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'myapp:latest'
+        image-ref: 'Food_Delivery_Frontend:latest'
         format: 'json'
         output: 'trivy-report.json'
 
