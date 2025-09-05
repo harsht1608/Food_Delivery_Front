@@ -36,7 +36,7 @@ jobs:
           -Dsonar.projectKey=food_delivery_frontend \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://210.79.129.173:9000 \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
     # -------- Build Docker image --------
     - name: Build Docker image
