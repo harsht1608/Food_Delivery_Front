@@ -40,7 +40,7 @@ jobs:
 
     # -------- Build Docker image --------
     - name: Build Docker image
-      run: docker build -t food_delivery_frontend:w:latest .
+      run: docker build -t food_delivery_frontend:latest .
 
     # -------- Trivy Scan --------
     - name: Run Trivy scan
