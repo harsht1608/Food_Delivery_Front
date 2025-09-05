@@ -81,7 +81,7 @@ jobs:
         password: ${{ secrets.EMAIL_PASS }}
         subject: "🚀 Build ${{ job.status }} - ${{ github.repository }}"
         to: "hashcode.765@gmail.com"
-        from: "CI Bot harsht1326@gmail.com"
+        from: "harsht1326@gmail.com"
         body: |
           <h2>🚀 Build ${{ job.status }}</h2>
           <table border="1" cellpadding="5" cellspacing="0">
