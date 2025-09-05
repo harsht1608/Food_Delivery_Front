@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # -------- Checkout --------
     - name: Checkout repo
       uses: actions/checkout@v3
 
@@ -19,7 +20,7 @@ jobs:
         npm install
         npm test || true   # fail hone pe bhi pipeline aage chale
 
-        # -------- SonarQube Scan (Self-hosted) --------
+    # -------- SonarQube Scan (Self-hosted) --------
     - name: Install SonarQube Scanner
       run: |
         sudo apt-get update
@@ -37,12 +38,9 @@ jobs:
           -Dsonar.host.url=http://210.79.129.173:9000 \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-
-    - name: Generate Sonar Summary
-      run: |
-        echo "Bugs: $(grep 'BUG' sonar-report.txt || echo 'N/A')" > sonar-summary.txt
-        echo "Code Smells: $(grep 'CODE_SMELL' sonar-report.txt || echo 'N/A')" >> sonar-summary.txt
-        echo "Coverage: 85%" >> sonar-summary.txt   # demo ke liye fixed value
+    # -------- Build Docker image --------
+    - name: Build Docker image
+      run: docker build -t Food_Delivery_Frontend:latest .
 
     # -------- Trivy Scan --------
     - name: Run Trivy scan
@@ -92,4 +90,3 @@ jobs:
             <tr><td>Trivy</td><td><pre>$(cat trivy-summary.txt)</pre></td></tr>
           </table>
           <p>📂 <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Download full reports</a></p>
-
